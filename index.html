@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emers Engine</title>
+    <link rel="stylesheet" href="/src/style.css">
+</head>
+<body>
+
+    <!--
+    ╔══════════════════════════════════════════════════════════╗
+    ║  EMERS ENGINE — index.html de PRODUCCIÓN                 ║
+    ║                                                          ║
+    ║  Estructura de capas (z-index):                          ║
+    ║    1   bg-layer       (PIXI canvas — fondo)              ║
+    ║    10  sprite-layer   (PIXI canvas — personajes)         ║
+    ║    30  #click-zone    (textbox + avance)                 ║
+    ║    40  #puzzle-overlay                                   ║
+    ║    50  #hud                                              ║
+    ║    60  #pause-menu                                       ║
+    ║    61  #audio-panel                                      ║
+    ║    62  #slot-panel                                       ║
+    ║    100 #main-menu                                        ║
+    ╚══════════════════════════════════════════════════════════╝
+    -->
+
+    <!-- ── VIEWPORT (canvas PIXI + overlay de juego) ─────────────────────── -->
+    <div id="emers-viewport">
+
+        <!-- Canvas PIXI se inyecta aquí por MERenderer.init() -->
+
+        <!-- Puzzle overlay -->
+        <div id="puzzle-overlay">
+            <div id="puzzle-card">
+                <div id="puzzle-title"></div>
+                <div id="puzzle-desc"></div>
+                <div id="puzzle-interaction"></div>
+            </div>
+        </div>
+
+        <!-- Textbox + avance por clic -->
+        <div id="click-zone">
+            <div id="text-box">
+                <div id="char-name"></div>
+                <p id="char-text"></p>
+            </div>
+        </div>
+
+        <!-- HUD en juego -->
+        <div id="hud">
+            <button class="hud-btn" id="btn-save">Guardar</button>
+            <button class="hud-btn" id="btn-pause">Pausa</button>
+            <button class="hud-btn hud-btn--exit" id="btn-exit">Salir</button>
+        </div>
+
+    </div><!-- /#emers-viewport -->
+
+
+    <!-- ── MENÚ DE PAUSA ─────────────────────────────────────────────────── -->
+    <div id="pause-menu">
+        <div class="menu-card" id="pause-card">
+            <div class="menu-card-title">— Pausa —</div>
+            <div id="pause-buttons">
+                <button class="btn-gold" id="btn-resume">Continuar</button>
+                <button class="btn-gold" id="btn-save-slot">Guardar partida</button>
+                <button class="btn-gold" id="btn-load-slot">Cargar partida</button>
+                <div class="ornament">·</div>
+                <button class="btn-gold" id="btn-audio-pause">Ajustes de audio</button>
+                <button class="btn-gold" id="btn-export-pause">Exportar save</button>
+                <button class="btn-gold" id="btn-import-pause">Importar save</button>
+                <div class="ornament">·</div>
+                <button class="btn-gold" id="btn-main-menu">Menú principal</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ── PANEL DE AUDIO ────────────────────────────────────────────────── -->
+    <div id="audio-panel">
+        <div class="menu-card" id="audio-card">
+            <div class="menu-card-title">— Ajustes de Audio —</div>
+
+            <div class="audio-row">
+                <label class="audio-label" for="slider-bgm">Música de fondo</label>
+                <input type="range" id="slider-bgm" class="audio-slider" min="0" max="100" value="50">
+            </div>
+            <div class="audio-row">
+                <label class="audio-label" for="slider-se">Efectos de sonido</label>
+                <input type="range" id="slider-se" class="audio-slider" min="0" max="100" value="80">
+            </div>
+            <div class="audio-row">
+                <label class="audio-label" for="slider-voice">Voces</label>
+                <input type="range" id="slider-voice" class="audio-slider" min="0" max="100" value="100">
+            </div>
+
+            <button class="btn-gold" id="btn-audio-back">← Volver</button>
+        </div>
+    </div>
+
+
+    <!-- ── PANEL DE SLOTS ────────────────────────────────────────────────── -->
+    <div id="slot-panel">
+        <div class="menu-card" id="slot-card">
+            <div class="menu-card-title" id="slot-panel-title">— Cargar Partida —</div>
+            <div id="slot-list"></div>
+            <button class="btn-gold" id="btn-slot-back" style="margin-top:0.5rem">← Volver</button>
+        </div>
+    </div>
+
+
+    <!-- ── MENÚ PRINCIPAL (splash) ───────────────────────────────────────── -->
+    <!--
+        Layout: título centrado en la mitad superior,
+        botones alineados a la izquierda en la mitad inferior.
+        Estilo Umineko clásico.
+    -->
+    <div id="main-menu">
+
+        <div id="menu-top">
+            <p id="menu-eyebrow">Novela Visual</p>
+            <h1 id="menu-title">EMERS ENGINE</h1>
+            <p id="menu-subtitle">Cada secreto tiene su precio</p>
+        </div>
+
+        <div id="menu-bottom">
+            <div id="menu-buttons">
+                <button class="btn-gold" id="btn-new-game">Nueva Partida</button>
+                <button class="btn-gold" id="btn-continue" disabled>Continuar</button>
+                <button class="btn-gold" id="btn-load">Cargar Partida</button>
+            </div>
+            <p id="menu-version">Emers Engine · v0.1.0</p>
+        </div>
+
+    </div>
+
+
+    <script type="module" src="/src/main.js"></script>
+</body>
+</html>

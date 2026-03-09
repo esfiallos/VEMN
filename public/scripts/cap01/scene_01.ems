@@ -1,0 +1,10 @@
+# cap01/scene_01 — prueba de fuego
+pawn valeria
+
+bg.set forest fade:1s
+audio.bgm play[track_01] vol:0.4
+
+show valeria:neutral at left fade
+
+valeria:neutral "Este es el primer diálogo real del engine."
+valeria:neutral "Si ves esto, todo funciona."
