@@ -54,6 +54,7 @@ const PARSE_RULES = [
     { regex: KDN_GRAMMAR.INVENTORY_ADD,    type: 'INVENTORY_ADD'    },
     { regex: KDN_GRAMMAR.INVENTORY_REMOVE, type: 'INVENTORY_REMOVE' },
     { regex: KDN_GRAMMAR.SET_FLAG,         type: 'SET_FLAG'         },
+    { regex: KDN_GRAMMAR.UNLOCK,           type: 'UNLOCK'           },
 
     // ── Condicionales (marcadores de bloque — el segundo pase los compila a saltos) ──
     { regex: KDN_GRAMMAR.IF_FLAG,      type: 'IF_FLAG'      },

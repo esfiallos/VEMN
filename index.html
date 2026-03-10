@@ -2,7 +2,12 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#080810">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="/manifest.json">
     <title>Dramaturge</title>
     <link rel="stylesheet" href="/src/style.css">
     <link rel="stylesheet" href="/src/menu-additions.css">
@@ -104,6 +109,7 @@
         <div id="menu-bottom">
             <div id="menu-buttons">
                 <button class="btn-gold" id="btn-new-game">Nueva Partida</button>
+                <button class="btn-gold" id="btn-gallery">Galería</button>
                 <button class="btn-gold" id="btn-load">Cargar Partida</button>
             </div>
             <p id="menu-version">Dramaturge · v0.1.0</p>
@@ -111,6 +117,16 @@
 
     </div>
 
+
+    <!-- Indicador de rotar pantalla — solo visible en portrait+touch -->
+    <div id="rotate-hint">
+        <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <rect x="8" y="12" width="24" height="32" rx="3"/>
+            <path d="M36 8 L40 12 L36 16"/>
+            <path d="M40 12 H28"/>
+        </svg>
+        <p>Gira tu dispositivo</p>
+    </div>
 
     <script type="module" src="/src/main.js"></script>
 </body>

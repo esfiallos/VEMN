@@ -158,6 +158,7 @@ export class Renderer {
         }
 
         const sprite  = new Sprite(texture);
+        sprite._dramSlot = slot; // guardado para _onResize
 
         this._positionSprite(sprite, slot);
         sprite.alpha = 0;
@@ -565,9 +566,19 @@ export class Renderer {
     }
 
     _onResize() {
+        const w = this.app.screen.width;
+        const h = this.app.screen.height;
+
+        // Reescalar fondo
         if (this.bgCurrent) {
-            this.bgCurrent.width  = this.app.screen.width;
-            this.bgCurrent.height = this.app.screen.height;
+            this.bgCurrent.width  = w;
+            this.bgCurrent.height = h;
+        }
+
+        // Reposicionar todos los sprites activos
+        for (const [, sprite] of this.activeSprites) {
+            const slot = sprite._dramSlot;
+            if (slot) this._positionSprite(sprite, slot);
         }
     }
 

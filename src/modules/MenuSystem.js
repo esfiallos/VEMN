@@ -227,6 +227,7 @@ export class MenuSystem {
     _buildPanels() {
         this._buildSlotPanel();
         this._buildAudioPanel();
+        this._buildGalleryPanel();
         this._buildBacklogPanel();
         this._buildModal();
         this._buildLoadingOverlay();
@@ -360,6 +361,7 @@ export class MenuSystem {
 
         // ── Menú principal ────────────────────────────────────────────────────
         on(this._els.btnNew,      'click', () => this._actionNewGame());
+        on(this._els.btnGallery,  'click', () => this._openGallery());
         // "Continuar" y "Cargar Partida" en menú principal: ambos abren slots (load)
         on(this._els.btnLoad,     'click', () => this._actionOpenSlots('load'));
 
@@ -385,6 +387,8 @@ export class MenuSystem {
         // ── ESC ───────────────────────────────────────────────────────────────
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') this._handleEsc();
+            if (e.key === 'ArrowLeft')  this._lbNavigate?.(-1);
+            if (e.key === 'ArrowRight') this._lbNavigate?.(1);
             if (e.key === 'l' || e.key === 'L') {
                 if (this._isBacklogOpen()) this._closeBacklog();
                 else this._openBacklog();
@@ -461,6 +465,126 @@ async _actionOpenSlots(mode) {
     }
 
 
+
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // GALERÍA
+    // ─────────────────────────────────────────────────────────────────────────
+
+    _buildGalleryPanel() {
+        const el = document.createElement('div');
+        el.id = 'dm-gallery';
+        el.className = 'dm-hidden';
+        el.innerHTML = `
+            <div class="dm-gallery__inner">
+                <div class="dm-gallery__header">
+                    <span class="dm-gallery__title">Galería</span>
+                    <button class="dm-gallery__close" id="dm-gallery-close">✕</button>
+                </div>
+                <div class="dm-gallery__grid" id="dm-gallery-grid"></div>
+            </div>
+            <div class="dm-gallery__lightbox dm-hidden" id="dm-gallery-lightbox">
+                <button class="dm-gallery__lb-close" id="dm-gallery-lb-close">✕</button>
+                <button class="dm-gallery__lb-prev" id="dm-gallery-lb-prev">‹</button>
+                <img class="dm-gallery__lb-img" id="dm-gallery-lb-img" src="" alt="">
+                <div class="dm-gallery__lb-caption" id="dm-gallery-lb-caption"></div>
+                <button class="dm-gallery__lb-next" id="dm-gallery-lb-next">›</button>
+            </div>`;
+        document.body.appendChild(el);
+        this._els.galleryPanel = el;
+
+        document.getElementById('dm-gallery-close')
+            ?.addEventListener('click', () => this._closeGallery());
+
+        document.getElementById('dm-gallery-lb-close')
+            ?.addEventListener('click', () => this._closeLightbox());
+
+        document.getElementById('dm-gallery-lb-prev')
+            ?.addEventListener('click', () => this._lbNavigate(-1));
+
+        document.getElementById('dm-gallery-lb-next')
+            ?.addEventListener('click', () => this._lbNavigate(1));
+
+        // Cerrar lightbox con clic en el fondo
+        document.getElementById('dm-gallery-lightbox')
+            ?.addEventListener('click', (e) => {
+                if (e.target.id === 'dm-gallery-lightbox') this._closeLightbox();
+            });
+    }
+
+    async _openGallery() {
+        await this._renderGallery();
+        this._els.galleryPanel?.classList.remove('dm-hidden');
+    }
+
+    _closeGallery() {
+        this._closeLightbox();
+        this._els.galleryPanel?.classList.add('dm-hidden');
+    }
+
+    async _renderGallery() {
+        const grid = document.getElementById('dm-gallery-grid');
+        if (!grid) return;
+
+        const entries = await this.saveManager.db.gallery
+            ?.orderBy('unlockedAt').toArray() ?? [];
+
+        if (entries.length === 0) {
+            grid.innerHTML = `<div class="dm-gallery__empty">
+                Todavía no hay imágenes desbloqueadas.<br>
+                <span>Continúa jugando para descubrirlas.</span>
+            </div>`;
+            return;
+        }
+
+        this._galleryEntries = entries; // para navegación del lightbox
+
+        grid.innerHTML = entries.map((e, i) => `
+            <button class="dm-gallery__thumb" data-index="${i}" title="${e.title}">
+                <img src="${e.path}.webp" alt="${e.title}"
+                     onerror="this.src='${e.path}.png';this.onerror=null">
+                <span class="dm-gallery__thumb-label">${e.title}</span>
+            </button>
+        `).join('');
+
+        grid.querySelectorAll('.dm-gallery__thumb').forEach(btn => {
+            btn.addEventListener('click', () => {
+                this._openLightbox(parseInt(btn.dataset.index));
+            });
+        });
+    }
+
+    _openLightbox(index) {
+        const entries = this._galleryEntries ?? [];
+        if (!entries[index]) return;
+
+        this._lbIndex = index;
+        this._updateLightbox();
+        document.getElementById('dm-gallery-lightbox')?.classList.remove('dm-hidden');
+    }
+
+    _closeLightbox() {
+        document.getElementById('dm-gallery-lightbox')?.classList.add('dm-hidden');
+    }
+
+    _lbNavigate(dir) {
+        const entries = this._galleryEntries ?? [];
+        this._lbIndex = (this._lbIndex + dir + entries.length) % entries.length;
+        this._updateLightbox();
+    }
+
+    _updateLightbox() {
+        const entry = this._galleryEntries?.[this._lbIndex];
+        if (!entry) return;
+        const img = document.getElementById('dm-gallery-lb-img');
+        const cap = document.getElementById('dm-gallery-lb-caption');
+        if (img) {
+            img.src = `${entry.path}.webp`;
+            img.onerror = () => { img.src = `${entry.path}.png`; img.onerror = null; };
+            img.alt = entry.title;
+        }
+        if (cap) cap.textContent = entry.title;
+    }
 
     _buildBacklogPanel() {
         const el = document.createElement('div');
@@ -659,6 +783,7 @@ async _actionOpenSlots(mode) {
     // ─────────────────────────────────────────────────────────────────────────
 
     _handleEsc() {
+        if (!this._els.galleryPanel?.classList.contains('dm-hidden')) { this._closeGallery(); return; }
         if (this._isBacklogOpen()) { this._closeBacklog(); return; }
         const S = MenuSystem.STATES;
         if (this._state === S.MAIN_MENU || this._state === S.LOADING) return;

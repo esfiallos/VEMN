@@ -1,7 +1,7 @@
 // src/core/database/db.js
 import Dexie from 'dexie';
 
-export const db = new Dexie('DramaturgeDB');
+export const db = new Dexie('EmersEngineDB');
 
 // ─── CONTRATO DE DATOS ────────────────────────────────────────────────────────
 //
@@ -33,4 +33,14 @@ db.version(2).stores({
     puzzles:    'puzzleId, type',
     inventory:  'itemKey',
     saves:      'slotId, savedAt',
+});
+// Versión 3: agrega la galería de CGs.
+// id:         identificador del CG (ej: 'cg_01') — clave primaria
+// unlockedAt: timestamp — indexado para ordenar por orden de desbloqueo
+db.version(3).stores({
+    characters: 'id, name',
+    puzzles:    'puzzleId, type',
+    inventory:  'itemKey',
+    saves:      'slotId, savedAt',
+    gallery:    'id, unlockedAt',
 });

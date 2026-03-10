@@ -488,3 +488,264 @@
 .dm-backlog__entry:last-child .dm-backlog__text--narrate {
     color: rgba(237, 232, 218, 0.38);
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   GALERÍA — CGs desbloqueados, accesible desde el menú principal
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+#dm-gallery {
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(3, 3, 5, 0.96);
+    backdrop-filter: blur(4px);
+    display: flex; align-items: center; justify-content: center;
+    animation: backlog-in 0.18s ease-out;
+}
+#dm-gallery.dm-hidden { display: none; }
+
+.dm-gallery__inner {
+    width: min(900px, 94vw);
+    height: min(80vh, 700px);
+    display: flex; flex-direction: column;
+    border: 1px solid rgba(201, 168, 76, 0.18);
+    background: rgba(6, 6, 10, 0.98);
+}
+
+.dm-gallery__header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.75rem 1.25rem;
+    border-bottom: 1px solid rgba(201, 168, 76, 0.12);
+    flex-shrink: 0;
+}
+.dm-gallery__title {
+    font-family: 'Cinzel', Georgia, serif;
+    font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: rgba(201, 168, 76, 0.5);
+}
+.dm-gallery__close {
+    background: transparent; border: none;
+    color: rgba(201, 168, 76, 0.35); font-size: 0.8rem;
+    cursor: pointer; padding: 0.2rem 0.4rem; transition: color 0.15s; line-height: 1;
+}
+.dm-gallery__close:hover { color: rgba(201, 168, 76, 0.8); }
+
+/* Grid de miniaturas */
+.dm-gallery__grid {
+    flex: 1; overflow-y: auto; padding: 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1rem;
+    align-content: start;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(201, 168, 76, 0.15) transparent;
+}
+.dm-gallery__grid::-webkit-scrollbar { width: 4px; }
+.dm-gallery__grid::-webkit-scrollbar-thumb { background: rgba(201, 168, 76, 0.15); }
+
+.dm-gallery__thumb {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(201, 168, 76, 0.1);
+    cursor: pointer; padding: 0;
+    display: flex; flex-direction: column;
+    transition: border-color 0.15s, transform 0.15s;
+    overflow: hidden;
+}
+.dm-gallery__thumb:hover {
+    border-color: rgba(201, 168, 76, 0.4);
+    transform: scale(1.02);
+}
+.dm-gallery__thumb img {
+    width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block;
+}
+.dm-gallery__thumb-label {
+    font-family: 'Cinzel', Georgia, serif;
+    font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: rgba(237, 232, 218, 0.4);
+    padding: 0.4rem 0.5rem; text-align: center;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.dm-gallery__empty {
+    grid-column: 1 / -1;
+    text-align: center; padding: 4rem 2rem;
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 1.1rem; font-style: italic;
+    color: rgba(237, 232, 218, 0.2); line-height: 2;
+}
+.dm-gallery__empty span { font-size: 0.85rem; }
+
+/* Lightbox */
+.dm-gallery__lightbox {
+    position: fixed; inset: 0; z-index: 210;
+    background: rgba(0, 0, 0, 0.96);
+    display: flex; align-items: center; justify-content: center;
+    animation: backlog-in 0.15s ease-out;
+}
+.dm-gallery__lightbox.dm-hidden { display: none; }
+
+.dm-gallery__lb-img {
+    max-width: 90vw; max-height: 85vh;
+    object-fit: contain; display: block;
+    border: 1px solid rgba(201, 168, 76, 0.15);
+}
+.dm-gallery__lb-caption {
+    position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+    font-family: 'Cinzel', Georgia, serif;
+    font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: rgba(201, 168, 76, 0.45);
+    white-space: nowrap;
+}
+.dm-gallery__lb-close {
+    position: absolute; top: 1.25rem; right: 1.5rem;
+    background: transparent; border: none;
+    color: rgba(201, 168, 76, 0.35); font-size: 1rem;
+    cursor: pointer; transition: color 0.15s; padding: 0.3rem;
+}
+.dm-gallery__lb-close:hover { color: rgba(201, 168, 76, 0.8); }
+
+.dm-gallery__lb-prev,
+.dm-gallery__lb-next {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    background: rgba(0,0,0,0.5); border: 1px solid rgba(201,168,76,0.15);
+    color: rgba(201, 168, 76, 0.5); font-size: 1.8rem;
+    cursor: pointer; padding: 0.5rem 0.8rem; transition: all 0.15s;
+    line-height: 1;
+}
+.dm-gallery__lb-prev { left: 1.5rem; }
+.dm-gallery__lb-next { right: 1.5rem; }
+.dm-gallery__lb-prev:hover,
+.dm-gallery__lb-next:hover {
+    border-color: rgba(201,168,76,0.5);
+    color: rgba(201, 168, 76, 0.9);
+    background: rgba(0,0,0,0.75);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   RESPONSIVE / LETTERBOX / MOBILE
+   ═══════════════════════════════════════════════════════════════════════════
+
+   Estrategia: el juego siempre se ve en 16:9.
+   - Desktop ancho: barras negras laterales si la pantalla es más ancha que 16:9
+   - Mobile landscape: ocupa el ancho completo, barras arriba/abajo si hace falta
+   - Mobile portrait: se gira la indicación, el juego no se deforma
+
+   El viewport es el contenedor 16:9. Todo lo que hay dentro
+   (canvas, textbox, HUD, menús) escala proporcionalmente.
+   font-size en #viewport usa vmin para que el texto escale con el contenedor.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Letterbox base ──────────────────────────────────────────────────────── */
+body {
+    margin: 0; padding: 0;
+    background: #000; /* barras negras fuera del viewport */
+    display: flex; align-items: center; justify-content: center;
+    min-height: 100dvh;
+    overflow: hidden;
+}
+
+#viewport {
+    /* Mantener 16:9 siempre */
+    aspect-ratio: 16 / 9;
+    /* Ocupar el máximo espacio posible sin romper el ratio */
+    width: min(100dvw, 100dvh * 16 / 9);
+    height: min(100dvh, 100dvw * 9 / 16);
+    position: relative;
+    overflow: hidden;
+    /* font-size base para escalar todos los rem del juego con el viewport */
+    font-size: clamp(10px, 1.5vmin, 18px);
+}
+
+/* ── HUD responsive ──────────────────────────────────────────────────────── */
+/* En pantallas pequeñas el HUD necesita botones más grandes (touch targets) */
+@media (max-width: 768px), (pointer: coarse) {
+    #hud {
+        height: 52px; /* más alto en móvil */
+    }
+    .hud-btn {
+        font-size: 0.65rem;
+        padding: 0 0.9rem;
+        min-width: 52px; /* target mínimo táctil */
+    }
+    #hud-title  { display: none; } /* ocultar título en pantallas pequeñas */
+    #hud-scene  { display: none; }
+}
+
+/* ── Textbox responsive ──────────────────────────────────────────────────── */
+@media (pointer: coarse) {
+    #text-box {
+        padding: 1rem 1.25rem 1.5rem;
+    }
+    #char-name {
+        font-size: 0.75rem;
+    }
+    #char-text {
+        font-size: 1.05rem;
+        line-height: 1.65;
+    }
+}
+
+/* ── Menús responsive ────────────────────────────────────────────────────── */
+@media (pointer: coarse) {
+    .btn-gold {
+        padding: 0.8rem 1.5rem;
+        font-size: 0.7rem;
+        min-height: 48px; /* touch target */
+    }
+    .menu-card-title {
+        font-size: 0.75rem;
+    }
+    /* Slots: filas más altas */
+    .dm-slot-item {
+        min-height: 52px;
+    }
+}
+
+/* ── Galería responsive ──────────────────────────────────────────────────── */
+@media (max-width: 600px), (pointer: coarse) {
+    .dm-gallery__grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 0.6rem; padding: 1rem;
+    }
+    .dm-gallery__lb-prev { left: 0.5rem; }
+    .dm-gallery__lb-next { right: 0.5rem; }
+}
+
+/* ── Indicador de rotar pantalla (portrait en móvil) ─────────────────────── */
+#rotate-hint {
+    display: none;
+    position: fixed; inset: 0; z-index: 9999;
+    background: #080810;
+    flex-direction: column;
+    align-items: center; justify-content: center; gap: 1.5rem;
+    font-family: 'Cinzel', Georgia, serif;
+    color: rgba(201, 168, 76, 0.6);
+    text-align: center; padding: 2rem;
+}
+#rotate-hint svg {
+    width: 64px; height: 64px;
+    fill: none; stroke: rgba(201, 168, 76, 0.4);
+    stroke-width: 1.5; stroke-linecap: round;
+    animation: rotate-pulse 2s ease-in-out infinite;
+}
+#rotate-hint p {
+    font-size: 0.7rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: rgba(201, 168, 76, 0.4);
+}
+@keyframes rotate-pulse {
+    0%, 100% { transform: rotate(0deg); opacity: 0.4; }
+    50%       { transform: rotate(90deg); opacity: 0.8; }
+}
+
+/* Mostrar solo en portrait en dispositivos táctiles */
+@media (orientation: portrait) and (pointer: coarse) {
+    #rotate-hint { display: flex; }
+    /* No ocultar el juego — el hint lo cubre */
+}
+
+/* ── Safe areas (iPhone notch/home bar) ──────────────────────────────────── */
+@supports (padding: env(safe-area-inset-bottom)) {
+    body {
+        padding-bottom: env(safe-area-inset-bottom);
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);
+    }
+}

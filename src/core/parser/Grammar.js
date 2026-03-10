@@ -97,5 +97,6 @@ export const KDN_GRAMMAR = {
     ELSE: /^else$/,
 
     // endif
-    ENDIF: /^endif$/,
+    ENDIF:   /^endif$/,
+    UNLOCK:  /^unlock\s+(?<cgId>\w+)(?:\s+title:"(?<title>[^"]+)")?/,
 };

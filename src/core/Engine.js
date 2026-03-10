@@ -422,6 +422,24 @@ export class Dramaturge {
                 break;
             }
 
+            case 'UNLOCK': {
+                // Meta-progreso — no vive en GameState sino en db.gallery directamente.
+                // Sobrevive a Nueva Partida y a borrar saves.
+                const existing = await this.db.gallery?.get(inst.cgId);
+                if (!existing) {
+                    const path = `/assets/cg/${inst.cgId}`;
+                    await this.db.gallery?.put({
+                        id:          inst.cgId,
+                        title:       inst.title ?? inst.cgId,
+                        path,
+                        unlockedAt:  Date.now(),
+                    });
+                    console.log(`[Engine] CG desbloqueado: "${inst.cgId}"`);
+                }
+                await this._nextInternal();
+                break;
+            }
+
             // ── Condicionales ──────────────────────────────────────────────────────
 
             case 'COND_JUMP': {
