@@ -19,6 +19,7 @@
 - [Herramientas de desarrollo](#herramientas-de-desarrollo)
 - [Roadmap](#roadmap)
 - [Deuda técnica](#deuda-técnica)
+- [GitHub — configuración del repositorio](#github--configuración-del-repositorio)
 - [Contribución](#contribución)
 
 ---
@@ -62,11 +63,12 @@ Todos los documentos viven en la raíz del repositorio.
 | Archivo | Descripción |
 |---|---|
 | [`README.md`](README.md) | Este archivo — setup, índice, contribución |
-| [`KOEDAN.md`](KOEDAN.md) | Referencia completa del lenguaje de scripting `.dan` |
-| [`WORKFLOW.md`](WORKFLOW.md) | Incorporación de assets, personajes, seed.js, PWA |
-| [`ARQUITECTURA.md`](ARQUITECTURA.md) | Diagramas de módulos, flujo de ejecución, z-index, DB schema |
-| [`TODO.md`](TODO.md) | Hoja de ruta activa — completado, pendiente, deuda técnica |
-| [`SINTAXIS.md`](SINTAXIS.md) | ⚠️ Deprecado — ver `KOEDAN.md` |
+| [`CONTRIBUTING.md`](CONTRIBUTING.md) | Guía de contribución — Issues, PRs, convenciones, reglas del engine |
+| [`docs/KOEDAN.md`](docs/KOEDAN.md) | Referencia completa del lenguaje de scripting `.dan` |
+| [`docs/WORKFLOW.md`](docs/WORKFLOW.md) | Incorporación de assets, personajes, seed.js, PWA |
+| [`docs/ARQUITECTURA.md`](docs/ARQUITECTURA.md) | Diagramas de módulos, flujo de ejecución, z-index, DB schema |
+| [`docs/TODO.md`](docs/TODO.md) | Hoja de ruta activa — completado, pendiente, deuda técnica |
+| [`docs/SINTAXIS.md`](docs/SINTAXIS.md) | ⚠️ Deprecado — ver `docs/KOEDAN.md` |
 
 ---
 
@@ -121,7 +123,11 @@ Todos los documentos viven en la raíz del repositorio.
 ├── manifest.json
 ├── vite.config.js
 ├── package.json
-├── README.md · KOEDAN.md · WORKFLOW.md · ARQUITECTURA.md · TODO.md
+├── README.md · CONTRIBUTING.md
+├── docs/
+│   ├── KOEDAN.md · WORKFLOW.md
+│   ├── ARQUITECTURA.md · TODO.md
+│   └── SINTAXIS.md  ← deprecado
 ├── public/
 │   ├── scripts/                  ← Archivos .dan del juego
 │   │   └── cap01/scene_01.dan
@@ -185,7 +191,7 @@ set flag.cap02_completo = true
 goto cap02/scene_02
 ```
 
-Ver [`KOEDAN.md`](KOEDAN.md) — referencia completa de todas las instrucciones, operadores y convenciones.
+Ver [`docs/KOEDAN.md`](docs/KOEDAN.md) — referencia completa de todas las instrucciones, operadores y convenciones.
 
 ---
 
@@ -201,7 +207,7 @@ Ver [`KOEDAN.md`](KOEDAN.md) — referencia completa de todas las instrucciones,
 | Sprites | `public/assets/sprites/{id}/` | se registran en `/dev/characters.html` |
 
 Sin extensión en el script. El renderer prueba `webp → png → jpg` automáticamente.  
-Ver [`WORKFLOW.md`](WORKFLOW.md) para el proceso completo de incorporación.
+Ver [`docs/WORKFLOW.md`](docs/WORKFLOW.md) para el proceso completo de incorporación.
 
 ---
 
@@ -217,7 +223,7 @@ Ver [`WORKFLOW.md`](WORKFLOW.md) para el proceso completo de incorporación.
 | `gallery` | `id` | CGs desbloqueados — **meta-progreso, sobrevive a todo** |
 
 `seed.js` puebla la DB en instalación fresca. Se genera desde `/dev/characters.html` → **Exportar seed.js**.  
-Ver [`ARQUITECTURA.md`](ARQUITECTURA.md) para el schema completo y reglas de migración.
+Ver [`docs/ARQUITECTURA.md`](docs/ARQUITECTURA.md) para el schema completo y reglas de migración.
 
 ---
 
@@ -264,7 +270,7 @@ Ver [`ARQUITECTURA.md`](ARQUITECTURA.md) para el schema completo y reglas de mig
 
 ## Roadmap
 
-Ver [`TODO.md`](TODO.md) para el detalle completo con sintaxis propuesta y archivos involucrados en cada feature.
+Ver [`docs/TODO.md`](docs/TODO.md) para el detalle completo con sintaxis propuesta y archivos involucrados en cada feature.
 
 **Motor:**
 - [ ] Efectos de pantalla — `fx shake` · `fx flash` · viñeta
@@ -294,83 +300,64 @@ Ver [`TODO.md`](TODO.md) para el detalle completo con sintaxis propuesta y archi
 
 ---
 
+
+## GitHub — configuración del repositorio
+
+Una vez subido el código, estas son las pestañas y opciones a configurar:
+
+### Pages + Actions (deploy automático)
+
+El proyecto incluye dos workflows en `.github/workflows/`:
+
+- **`ci.yml`** — corre en cada PR, verifica que el build no se rompe antes de permitir el merge
+- **`deploy.yml`** — corre en cada push a `main`, despliega automáticamente a GitHub Pages
+
+Para activar Pages:
+1. `Settings` → `Pages` → `Build and deployment` → seleccionar **GitHub Actions**
+2. `Settings` → `Actions` → `General` → `Workflow permissions` → **Read and write permissions**
+3. Hacer push a `main` — el primer deploy corre automáticamente
+
+El juego quedará disponible en `https://tu-usuario.github.io/dramaturge/`.
+
+Si el repo tiene un nombre distinto de `dramaturge`, cambiar `VITE_BASE` en `vite.config.js` o añadir un secreto de repositorio `VITE_BASE` con el nombre correcto.
+
+### Discussions
+
+Para separar preguntas de bugs. Activar en `Settings` → `Features` → **Discussions**.
+Una vez activo, añadir dos categorías desde la pestaña Discussions:
+- **Q&A** — dudas de uso del motor y del lenguaje Koedan
+- **Ideas** — propuestas que no son bugs ni features concretas todavía
+
+### Branch protection en `main`
+
+Impide pushes directos — cualquier cambio pasa por PR y verifica el build.
+
+`Settings` → `Branches` → `Add branch ruleset`:
+- Branch name pattern: `main`
+- ✅ Require a pull request before merging
+- ✅ Require status checks to pass → añadir el check `Build` (del workflow `ci.yml`)
+- ✅ Block force pushes
+
+### Projects (tablero Kanban)
+
+Para seguimiento activo de features y bugs. Desde la pestaña `Projects` → `New project` → **Board**. Columnas sugeridas: `Backlog` · `En progreso` · `En revisión` · `Hecho`. Vincular Issues al proyecto para que se muevan automáticamente entre columnas.
+
+### Labels recomendados
+
+GitHub trae algunos por defecto. Añadir estos desde `Issues` → `Labels`:
+
+| Label | Color | Uso |
+|---|---|---|
+| `bug` | rojo `#d73a4a` | Algo no funciona |
+| `enhancement` | azul `#a2eeef` | Feature nueva |
+| `question` | lila `#d876e3` | Pregunta de uso |
+| `documentation` | verde `#0075ca` | Cambio solo en docs |
+| `good first issue` | verde `#7057ff` | Tarea fácil para colaboradores nuevos |
+| `wontfix` | gris `#ffffff` | No se implementará |
+| `koedan` | dorado `#e4a11b` | Afecta el lenguaje de scripting |
+
 ## Contribución
 
-### Antes de empezar
+Ver [`CONTRIBUTING.md`](CONTRIBUTING.md) para la guía completa — setup del fork, convenciones, reglas del engine, formato de commits y qué PRs se aceptan.
 
-Abre un **Issue** antes de escribir código — para bugs incluye pasos de reproducción, para features explica el caso de uso. Espera confirmación. Algunos cambios no encajan aunque sean técnicamente correctos, y es mejor saberlo antes de invertir tiempo.
-
-### Setup del fork
-
-```bash
-git clone https://github.com/tu-usuario/dramaturge
-cd dramaturge
-npm install
-npm run dev
-```
-
-La DB se puebla en el primer arranque desde `seed.js`.
-
-### La regla más importante del engine
-
-Los métodos internos del Engine siempre llaman `_nextInternal()`, **nunca `next()` público**. Si un `case` nuevo en `execute()` llama `next()`, el re-entrancy guard descarta la llamada silenciosamente y el juego se cuelga en esa instrucción sin error visible. Es el bug más difícil de diagnosticar y el más fácil de cometer.
-
-### Añadir una instrucción al lenguaje
-
-Siempre son exactamente tres archivos, en este orden:
-
-```
-Grammar.js    ← definir el regex con named groups (?<nombre>)
-Parser.js     ← añadir { regex: KDN_GRAMMAR.NUEVA, type: 'NUEVA' } en PARSE_RULES
-Engine.js     ← añadir case 'NUEVA': { ... await this._nextInternal(); break; }
-```
-
-Si el cambio afecta el lenguaje, actualizar `KOEDAN.md` en el mismo PR.
-
-### Convenciones de código
-
-| Elemento | Convención | Ejemplo |
-|---|---|---|
-| Clases | `PascalCase` | `AudioManager`, `SceneManager` |
-| Métodos privados | `_guiónBajo` | `_nextInternal()`, `_buildGalleryPanel()` |
-| Constantes | `UPPER_SNAKE` | `FADE_MS`, `SLOT_X` |
-| Tipos de instrucción | `UPPER_SNAKE` | `SPRITE_SHOW`, `BG_CHANGE` |
-
-**Commits:**
-```
-feat(parser): añadir instrucción fx shake
-fix(audio): ducking no se restaura si audio no tiene evento ended
-docs(koedan): documentar sintaxis de fx
-refactor(renderer): extraer _positionSprite a método separado
-```
-
-Formato: `tipo(módulo): descripción en minúsculas`. Tipos: `feat` `fix` `docs` `refactor` `test`.
-
-### Qué PRs se aceptan
-
-**Sin Issue previo:**
-- Bugs con reproducción clara
-- Correcciones a la documentación
-- Mejoras a las herramientas de desarrollo (`/dev/`)
-- Nuevas instrucciones Koedan siguiendo el patrón de tres archivos
-- Mejoras de accesibilidad
-
-**Requieren Issue y confirmación:**
-- Nuevos tipos de puzzle
-- Cambios al schema de la DB (requieren migración de versión)
-- Cambios al sistema de audio
-- Cualquier cambio en los métodos de avance de `Engine.js`
-- Cambios de diseño visual
-
-**No se aceptan:**
-- Frameworks en el motor (React, Vue, etc.)
-- Migración a TypeScript sin coordinación previa
-- Cambios de paleta, fuentes o layout
-- Dependencias nuevas sin discusión
-
-### Abrir el PR
-
-- Rama desde `main`: `feat/fx-shake`, `fix/audio-duck-restore`
-- Un PR por cambio — no mezclar features no relacionadas
-- Descripción: qué cambia, por qué, cómo probarlo
-- Si toca el lenguaje o el workflow → actualizar `KOEDAN.md` o `WORKFLOW.md` en el mismo PR
+El resumen en una línea: **abre un Issue antes de escribir código**. Espera confirmación. Luego sigue el proceso descrito en `CONTRIBUTING.md`.

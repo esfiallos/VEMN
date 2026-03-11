@@ -67,8 +67,7 @@ La sintaxis de `fade:color` ya es natural en el lenguaje. Requiere actualizar el
 
 ### Service Worker — modo offline e instalación PWA
 
-Sin SW el juego no es instalable y no funciona sin conexión. Un SW básico de cache-first para los assets de `/public/` 
-Candidato: `vite-plugin-pwa`.
+Sin SW el juego no es instalable y no funciona sin conexión. Un SW básico de cache-first para los assets de `/public/` es suficiente. Candidato: `vite-plugin-pwa`.
 
 Requiere también crear `public/assets/icons/icon-192.png` y `icon-512.png`.
 
