@@ -65,7 +65,7 @@ Todos los documentos viven en la raíz del repositorio.
 | [`README.md`](README.md) | Este archivo — setup, índice, contribución |
 | [`CONTRIBUTING.md`](CONTRIBUTING.md) | Guía de contribución — Issues, PRs, convenciones, reglas del engine |
 | [`docs/KOEDAN.md`](docs/KOEDAN.md) | Referencia completa del lenguaje de scripting `.dan` |
-| [`docs/WORKFLOW.md`](docs/WORKFLOW.md) | Incorporación de assets, personajes, seed.js, PWA |
+| [`docs/WORKFLOW.md`](docs/Workflow.md) | Incorporación de assets, personajes, seed.js, PWA |
 | [`docs/ARQUITECTURA.md`](docs/ARQUITECTURA.md) | Diagramas de módulos, flujo de ejecución, z-index, DB schema |
 | [`docs/TODO.md`](docs/TODO.md) | Hoja de ruta activa — completado, pendiente, deuda técnica |
 | [`docs/SINTAXIS.md`](docs/SINTAXIS.md) | ⚠️ Deprecado — ver `docs/KOEDAN.md` |
