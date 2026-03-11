@@ -33,9 +33,9 @@ const CHARACTERS = [
         basePath:    '/assets/sprites/v/',
         voicePrefix: 'VAL_',
         poses: [
-            { alias: 'neutral',  file: 'v_idle.png'       },
-            { alias: 'triste',   file: 'v_sad.png'         },
-            { alias: 'sorpresa', file: 'v_surprised.png'   },
+            { alias: 'neutral',  file: 'v_idle'       },
+            { alias: 'triste',   file: 'v_sad'         },
+            { alias: 'sorpresa', file: 'v_surprised'   },
         ],
     },
     {
@@ -44,8 +44,8 @@ const CHARACTERS = [
         basePath:    '/assets/sprites/m/',
         voicePrefix: 'MIK_',
         poses: [
-            { alias: 'neutral', file: 'm_idle.png'  },
-            { alias: 'feliz',   file: 'm_happy.png' },
+            { alias: 'neutral', file: 'm_idle'  },
+            { alias: 'feliz',   file: 'm_happy' },
         ],
     },
 

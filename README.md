@@ -40,12 +40,18 @@
 
 ```bash
 npm install
-npm run dev       # localhost:5173
+npm run dev       # localhost:5173 — abre /dev/editor.html automáticamente
 npm run build
 npm run preview
 ```
 
 Node.js 18 o superior. Sin otras dependencias de sistema.
+
+`npm run dev` abre el editor de scripts en `/dev/editor.html`, no el juego. Para ver el juego en desarrollo ir a `localhost:5173/` manualmente.
+
+**Dependencias principales** — no requieren configuración adicional más allá de `npm install`:
+- `pixi.js ^8` — importado directamente como ESM, Vite lo bundlea sin plugins
+- `dexie ^4` — importado directamente como ESM, la DB se inicializa en el primer uso
 
 ---
 
