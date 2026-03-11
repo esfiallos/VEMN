@@ -1,0 +1,30 @@
+# .github/workflows/ci.yml
+# Se ejecuta en cada PR hacia main.
+# Verifica que el proyecto compila sin errores antes de permitir el merge.
+
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Verificar build
+        run: npm run build
