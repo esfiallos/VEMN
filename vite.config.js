@@ -6,7 +6,7 @@ import { resolve }      from 'path';
 // En desarrollo y en un dominio propio se sirve desde /.
 // La variable VITE_BASE permite sobreescribir esto si el repo tiene otro nombre
 // o si se despliega en un dominio propio con CNAME.
-const base = process.env.VITE_BASE ?? '/dramaturge/';
+const base = process.env.VITE_BASE ?? '/Dramaturge/';
 
 export default defineConfig({
 
@@ -23,7 +23,7 @@ export default defineConfig({
     build: {
         rollupOptions: {
             input: {
-                // Producción: solo el entry real. /dev/ no se publica
+                // Producción: solo el entry real. /dev/ no se publica.
                 main: resolve(__dirname, 'index.html'),
             },
         },
